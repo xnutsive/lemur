@@ -4,8 +4,29 @@ require 'digest/md5'
 require 'multi_json'
 
 module Lemur
-
   class ApiError < StandardError
+	  attr_reader :data
+
+	  def error_code
+		  @data['error_code']
+	  end
+
+	  def error_data
+		  @data['error_data']
+	  end
+
+	  def error_msg
+		  @data['error_msg']
+	  end
+
+	  def initialize(data)
+			@data = data
+			message = "#{error_code}: #{error_msg}"
+		  super(message)
+	  end
+  end
+
+  class ApiParsingError < StandardError
   end
 
   ODNOKLASSNIKI_API_URL = 'http://api.odnoklassniki.ru/fb.do'
@@ -63,7 +84,7 @@ module Lemur
       end
       json_data
     rescue MultiJson::DecodeError
-      raise ApiError, @response.body
+      raise ApiParsingError, @response.body
     end
 
     private
