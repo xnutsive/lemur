@@ -85,7 +85,12 @@ module Lemur
 
     def get(request_params)
       @response = get_request(request_params)
-      json_data = MultiJson.load(response.body)
+      json_data = nil
+      begin
+        json_data = MultiJson.load(response.body)
+      rescue MultiJson::DecodeError
+	      json_data = MultiJson.load(response.body.gsub(' }', '"}')) #Есть случаи отдачи кривого JSON от одноклассников
+			end
       if json_data.is_a? Hash
         if json_data['error_code']
           raise ApiError, json_data
