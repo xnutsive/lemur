@@ -27,6 +27,15 @@ module Lemur
   end
 
   class ApiParsingError < StandardError
+	  attr_reader :url
+	  attr_reader :body
+
+		def initialize(responce)
+			@url = responce.env[:url].to_s
+			@body = responce.body
+			message = "Wrong JSON at #{url}: #{body}"
+			super(message)
+		end
   end
 
   ODNOKLASSNIKI_API_URL = 'http://api.odnoklassniki.ru/fb.do'
@@ -84,7 +93,7 @@ module Lemur
       end
       json_data
     rescue MultiJson::DecodeError
-      raise ApiParsingError, @response.body
+      raise ApiParsingError, @response
     end
 
     private
