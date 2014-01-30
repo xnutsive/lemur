@@ -89,7 +89,7 @@ module Lemur
       begin
         json_data = MultiJson.load(response.body)
       rescue MultiJson::DecodeError
-	      json_data = MultiJson.load(response.body.gsub(' }', '"}')) #Есть случаи отдачи кривого JSON от одноклассников
+	      json_data = MultiJson.load(response.body.gsub(/[^"]}/, '"}')) #Есть случаи отдачи кривого JSON от одноклассников
 			end
       if json_data.is_a? Hash
         if json_data['error_code']
