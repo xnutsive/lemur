@@ -59,9 +59,11 @@ module Lemur
         raise ArgumentError, 'wrong number of arguments'
       end
       faraday_options = {
-            :headers['Content-Type'] => 'application/json',
-            :url => Lemur::ODNOKLASSNIKI_NEW_TOKEN_URL
-          }
+	      timeout: 150,
+	      open_timeout: 150,
+        :headers['Content-Type'] => 'application/json',
+        url: Lemur::ODNOKLASSNIKI_NEW_TOKEN_URL
+      }
       conn = init_faraday(faraday_options)
       new_token_response = conn.post do |req|
                           req.params = { 
@@ -118,10 +120,12 @@ module Lemur
     end
 
     def start_faraday
-      faraday_options = {
-            :headers['Content-Type'] => 'application/json',
-            :url => Lemur::ODNOKLASSNIKI_API_URL
-          }
+	    faraday_options = {
+		    timeout: 150,
+		    open_timeout: 150,
+		    :headers['Content-Type'] => 'application/json',
+		    url: Lemur::ODNOKLASSNIKI_API_URL
+	    }
       @connection = init_faraday(faraday_options)
     end
 
