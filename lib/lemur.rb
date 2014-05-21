@@ -60,7 +60,6 @@ module Lemur
       end
       faraday_options = {
 	      request: {:timeout=>150, :open_timeout=>150},
-        :headers['Content-Type'] => 'application/json',
         url: Lemur::ODNOKLASSNIKI_NEW_TOKEN_URL
       }
       conn = init_faraday(faraday_options)
@@ -121,19 +120,17 @@ module Lemur
     def start_faraday
 	    faraday_options = {
 		    request: {:timeout=>150, :open_timeout=>150},
-		    :headers['Content-Type'] => 'application/json',
 		    url: Lemur::ODNOKLASSNIKI_API_URL
 	    }
       @connection = init_faraday(faraday_options)
     end
-    Faraday::ConnectionOptions
-
 
     def init_faraday(faraday_options)
       Faraday.new(faraday_options) do |faraday|
-            faraday.request  :url_encoded 
-            faraday.response :logger
-            faraday.adapter  Faraday.default_adapter
+        faraday.headers['Content-Type'] = 'application/json'
+        faraday.request  :url_encoded
+        faraday.response :logger
+        faraday.adapter  Faraday.default_adapter
       end
     end
 
